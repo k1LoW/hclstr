@@ -1,6 +1,7 @@
 package fmt
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -82,6 +83,9 @@ func (h *Hcl) formatStringLiterals(body *hclwrite.Body) error {
 
 			switch t.Type {
 			case hclsyntax.TokenOHeredoc:
+				if !bytes.Contains(t.Bytes, []byte("<<-")) {
+					t.Bytes = []byte(strings.ReplaceAll(string(t.Bytes), "<<", "<<-"))
+				}
 				startHeredoc = true
 				next = true
 				continue

@@ -35,11 +35,18 @@ func TestFormat(t *testing.T) {
 			"../testdata/directive_fmt.hcl",
 		},
 		{
-			"skip string with function",
+			"format with function",
 			map[string]string{
 				"block": "prettier ? --write --parser json",
 			},
 			"../testdata/with_func_fmt.hcl",
+		},
+		{
+			"auto indent heredoc",
+			map[string]string{
+				"policy": "prettier ? --write --parser json",
+			},
+			"../testdata/indent_heredoc_fmt.tf",
 		},
 	}
 
