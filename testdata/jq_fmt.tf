@@ -3,9 +3,9 @@ resource "aws_iam_policy" "allow_dynamodb_table_post" {
   policy = <<-EOT
 {
 "Version": "2012-10-17",
-"Statement": {
+  "Statement": {
 "Effect": "Allow",
-"Action": "dynamodb:*",
+         "Action": "dynamodb:*",
 "Resource": "${aws_dynamodb_table.post.arn}"
 }
 }
