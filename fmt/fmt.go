@@ -34,6 +34,7 @@ func New(fmtcmds map[string]string) *Hcl {
 }
 
 func (h *Hcl) Format(in []byte) ([]byte, error) {
+	in = hclwrite.Format(in)
 	bin, err := safeexec.LookPath(h.shell)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find %s: %w", h.shell, err)
@@ -56,14 +57,15 @@ func (h *Hcl) Format(in []byte) ([]byte, error) {
 func (h *Hcl) formatStringLiterals(body *hclwrite.Body) error {
 	for _, attr := range body.Attributes() {
 		var (
-			fmtcmd     string
-			v          string
-			next       bool
-			fieldToken *hclwrite.Token
-			valueToken *hclwrite.Token
-			trimTokens []*hclwrite.Token
-			interp     string
-			names      []string
+			fmtcmd       string
+			v            string
+			startHeredoc bool
+			next         bool
+			fieldToken   *hclwrite.Token
+			valueToken   *hclwrite.Token
+			trimTokens   []*hclwrite.Token
+			interp       string
+			names        []string
 		)
 		for _, t := range attr.BuildTokens(nil) {
 			if t.Type == hclsyntax.TokenIdent {
@@ -79,9 +81,8 @@ func (h *Hcl) formatStringLiterals(body *hclwrite.Body) error {
 			}
 
 			switch t.Type {
-			case hclsyntax.TokenEqual:
-				continue
 			case hclsyntax.TokenOHeredoc:
+				startHeredoc = true
 				next = true
 				continue
 			case hclsyntax.TokenCHeredoc:
@@ -120,15 +121,23 @@ func (h *Hcl) formatStringLiterals(body *hclwrite.Body) error {
 				valueToken.Bytes = []byte(formatted)
 				valueToken.SpacesBefore = 0
 
+				t.SpacesBefore = fieldToken.SpacesBefore
+				t.Bytes = []byte(strings.TrimSpace(string(t.Bytes)))
+
 				for _, t := range trimTokens {
 					t.Type = hclsyntax.TokenStringLit
 					t.Bytes = nil
 				}
 
+				startHeredoc = false
 				fmtcmd = ""
 				v = ""
 				names = nil
 				continue
+			default:
+				if !startHeredoc {
+					continue
+				}
 			}
 
 			switch t.Type {
@@ -146,6 +155,7 @@ func (h *Hcl) formatStringLiterals(body *hclwrite.Body) error {
 				interp = ""
 				names = nil
 				trimTokens = nil
+				startHeredoc = false
 				continue
 			default: // case hclsyntax.TokenIdent, hclsyntax.TokenDot:
 				interp += string(t.Bytes)
