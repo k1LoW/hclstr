@@ -34,6 +34,13 @@ func TestFormat(t *testing.T) {
 			},
 			"../testdata/directive_fmt.hcl",
 		},
+		{
+			"skip string with function",
+			map[string]string{
+				"block": "prettier ? --write --parser json",
+			},
+			"../testdata/with_func_fmt.hcl",
+		},
 	}
 
 	for _, tt := range tests {
