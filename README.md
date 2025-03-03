@@ -80,6 +80,12 @@ resource "aws_iam_policy" "allow_dynamodb_table_post" {
 $ brew install k1LoW/tap/hclstr
 ```
 
+**[aqua](https://aquaproj.github.io/):**
+
+```console
+$ aqua g -i k1LoW/hclstr
+```
+
 **go install:**
 
 ```console
