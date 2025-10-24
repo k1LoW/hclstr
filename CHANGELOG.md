@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.1](https://github.com/k1LoW/hclstr/compare/v0.2.0...v0.2.1) - 2025-10-24
+### Other Changes
+- chore(deps): bump golang.org/x/sync from 0.1.0 to 0.11.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/hclstr/pull/9
+- chore(deps): bump golang.org/x/sync from 0.11.0 to 0.12.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/hclstr/pull/10
+
 ## [v0.2.0](https://github.com/k1LoW/hclstr/compare/v0.1.1...v0.2.0) - 2025-03-02
 ### New Features 🎉
 - feat(fmt): auto converting to indented heredoc by @k1LoW in https://github.com/k1LoW/hclstr/pull/7
